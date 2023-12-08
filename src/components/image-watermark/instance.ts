@@ -78,7 +78,7 @@ export const validateStrategy = {
   },
   multipleLineText: (importSetting: settingType) => {
     return window.isArray(importSetting.multipleLineText)
-      ? importSetting.multipleLineText?.filter(item => typeof item.text === 'string')
+      ? importSetting.multipleLineText?.filter(item => window.isPlainObject(item)).filter(item => typeof item.text === 'string')
       : defaultSetting.multipleLineText
   },
   multipleLineAlignType: (importSetting: settingType) => {
