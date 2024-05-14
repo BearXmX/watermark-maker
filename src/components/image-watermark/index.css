@@ -7,6 +7,10 @@
   overflow: auto;
 }
 
+.canvas-container > canvas {
+  margin: 0 auto;
+}
+
 .canvas-container .canvas-container-tips {
   width: 100%;
   padding: 32px;
@@ -93,6 +97,10 @@
   margin-bottom: 16px;
 }
 
+.multiple-canvas-content > canvas {
+  margin: 0 auto;
+}
+
 .multi-container-fixed {
   position: fixed;
   inset: 0;
@@ -106,4 +114,30 @@
   align-items: center;
   height: 60px;
   border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-btn-group {
+  display: none;
+}
+
+.mobile-intro-btn {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .mobile-btn-group {
+    display: inline-flex;
+  }
+
+  .pc-btn-group {
+    display: none;
+  }
+
+  .pc-intro-btn {
+    display: none;
+  }
+
+  .mobile-intro-btn {
+    display: inline-block;
+  }
 }

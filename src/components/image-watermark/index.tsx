@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Col, Row, Card, Button, message, Space, Drawer, Radio, Upload } from 'antd'
+import { Col, Row, Card, Button, message, Space, Drawer, Radio, Upload, Dropdown, MenuProps } from 'antd'
 import ConfigForm from './config-form'
 
 import { changeSettingAction, defaultSetting, downloadSettingAction, drawAction, importSettingAction } from './instance'
@@ -60,6 +60,39 @@ const ImageWatermark: React.FC<propsType> = props => {
     importSettingAction(options, setting, setSetting)
   }
 
+  const items: MenuProps['items'] = [
+    {
+      label: (
+        <Button type="dashed" className="export-watermark-btn" onClick={exportCanvas}>
+          导出为图片
+        </Button>
+      ),
+      key: '1',
+    },
+    {
+      label: (
+        <Button type="dashed" className="download-watermark-setting-btn" onClick={downloadSetting}>
+          导出当前画布配置
+        </Button>
+      ),
+      key: '2',
+    },
+    {
+      label: (
+        <Upload customRequest={importSetting} showUploadList={false} accept=".json">
+          <Button type="dashed" className="import-watermark-setting-btn">
+            导入配置
+          </Button>
+        </Upload>
+      ),
+      key: '3',
+    },
+  ]
+
+  const menuProps = {
+    items,
+  }
+
   useEffect(() => {
     drawImage()
   }, [setting])
@@ -83,26 +116,41 @@ const ImageWatermark: React.FC<propsType> = props => {
                 </Button>
               )}
 
-              <Button type="dashed" className="export-watermark-btn" onClick={exportCanvas}>
-                导出为图片
-              </Button>
-              <Button type="dashed" className="download-watermark-setting-btn" onClick={downloadSetting}>
-                导出当前画布配置
-              </Button>
-              <Upload customRequest={importSetting} showUploadList={false} accept=".json">
-                <Button type="dashed" className="import-watermark-setting-btn">
-                  导入配置
+              <Space className="mobile-btn-group">
+                <Dropdown.Button
+                  menu={menuProps}
+                  type="primary"
+                  className="mobile-open-watermark-btn"
+                  onClick={() => {
+                    setCurrentConfigId(id)
+                  }}
+                >
+                  配置水印
+                </Dropdown.Button>
+              </Space>
+
+              <Space className="pc-btn-group">
+                <Button type="dashed" className="export-watermark-btn" onClick={exportCanvas}>
+                  导出为图片
                 </Button>
-              </Upload>
-              <Button
-                className="open-watermark-btn"
-                type="primary"
-                onClick={() => {
-                  setCurrentConfigId(id)
-                }}
-              >
-                配置水印
-              </Button>
+                <Button type="dashed" className="download-watermark-setting-btn" onClick={downloadSetting}>
+                  导出当前画布配置
+                </Button>
+                <Upload customRequest={importSetting} showUploadList={false} accept=".json">
+                  <Button type="dashed" className="import-watermark-setting-btn">
+                    导入配置
+                  </Button>
+                </Upload>
+                <Button
+                  className="open-watermark-btn"
+                  type="primary"
+                  onClick={() => {
+                    setCurrentConfigId(id)
+                  }}
+                >
+                  配置水印
+                </Button>
+              </Space>
             </Space>
           }
           style={{ height: '100%' }}

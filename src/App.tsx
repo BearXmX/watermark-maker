@@ -19,6 +19,8 @@ function App() {
 
   const [openMultiHandler, setOpenMultiHandler] = useState<boolean>(false)
 
+  const [mobileOpenIntroduce, setMobileOpenIntroduce] = useState<boolean>(false)
+
   const steps: TourProps['steps'] = [
     {
       title: '配置水印',
@@ -64,29 +66,38 @@ function App() {
     },
   ]
 
-  /*   useEffect(() => {
-    document.body.addEventListener('click', function (e) {
-      const target = e.target as HTMLElement
+  const mobileSteps = [
+    {
+      title: '配置水印',
+      description: (
+        <div>
+          <p style={{ marginBottom: 8 }}> 点击该按钮打开抽屉 ={'>'}配置水印（上传你需要处理水印的图片）</p>
 
-      console.log(target)
+          <p style={{ marginBottom: 8 }}> 配置完毕后，点击旁边其他按钮将画布内容导出为图片</p>
 
-      console.log(document.getElementById('root')?.contains(target))
+          <p style={{ marginBottom: 8 }}> 您也可以点击旁边其他按钮导出当前画布配置，保留配置方便下次使用</p>
 
-      if (document.getElementById('root')?.contains(target)) {
-        console.log(target)
+          <p style={{ marginBottom: 8 }}> 您也可以点击旁边其他按钮导入配置，一键使用历史配置，但是请注意配置数据格式需符合规定，否则将按默认值处理</p>
 
-        if (target.className.includes('open-watermark-btn')) {
-          setCurrentConfigId('')
-        } else {
-          if (!target.parentElement?.className.includes('open-watermark-btn')) {
-            setCurrentConfigId('')
-          }
-        }
-      } else {
-        setCurrentConfigId('')
-      }
-    })
-  }, []) */
+          <p style={{ marginBottom: 8 }}> 您也可以点击旁边其他按钮增加画布，处理更多图片</p>
+
+          <div className="tour-upload-icon-container" style={{ width: '20%' }}>
+            {<PlusOutlined />}
+            <div style={{ marginTop: 8 }}>上传</div>
+          </div>
+        </div>
+      ),
+      target: () => document.querySelectorAll('.mobile-open-watermark-btn')[0] as HTMLDivElement,
+    },
+    {
+      title: '批量处理',
+      description: '您也可以点击该按钮批量处理图片',
+      target: () => document.querySelectorAll('.multi-canvas-btn')[0] as HTMLButtonElement,
+      nextButtonProps: {
+        children: '结束介绍',
+      },
+    },
+  ]
 
   return (
     <div className="App">
@@ -96,10 +107,21 @@ function App() {
             增加画布
           </Button>
           <Button
+            className="pc-intro-btn"
             type="default"
             onClick={() => {
               setCurrentConfigId('')
               setOpenIntroduce(true)
+            }}
+          >
+            使用介绍
+          </Button>
+          <Button
+            className="mobile-intro-btn"
+            type="default"
+            onClick={() => {
+              setCurrentConfigId('')
+              setMobileOpenIntroduce(true)
             }}
           >
             使用介绍
@@ -113,6 +135,8 @@ function App() {
       </Row>
 
       <Tour open={openIntroduce} onClose={() => setOpenIntroduce(false)} steps={steps} />
+
+      <Tour open={mobileOpenIntroduce} onClose={() => setMobileOpenIntroduce(false)} steps={mobileSteps} />
       {canvasIds.map((item, index) => {
         return (
           <ImageWatermark

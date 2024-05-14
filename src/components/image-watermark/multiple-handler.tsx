@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Card, Col, Modal, Row, Space, Upload, UploadProps, message } from 'antd'
+import { Button, Card, Col, Drawer, Modal, Row, Space, Upload, UploadProps, message } from 'antd'
 import { changeSettingAction, defaultSetting, downloadSettingAction, importSettingAction } from './instance'
 import ConfigForm from './config-form'
 import Canvas from './canvas'
@@ -14,6 +14,8 @@ const MultipleHanderWatermark: React.FC<propsType> = props => {
   const { setOpenMultiHandler } = props
 
   const [setting, setSetting] = useState<settingType>({ ...defaultSetting, image: [], file: [] })
+
+  const [showConfig, setShowConfig] = useState<boolean>(false)
 
   const changeSetting = function (key: keyof formValueType, value: formValueType[keyof formValueType]) {
     changeSettingAction(key, value, setting, setSetting)
@@ -63,31 +65,46 @@ const MultipleHanderWatermark: React.FC<propsType> = props => {
         body: {
           backgroundColor: '#eff0f8',
           padding: '2px 2px',
-          height: 800,
+          height: 770,
+          overflow: 'auto',
         },
       }}
       open={true}
-      onCancel={() => setOpenMultiHandler(false)}
+      onCancel={() => {
+        setOpenMultiHandler(false)
+        setShowConfig(false)
+      }}
       okButtonProps={{
         style: {
           display: 'none',
         },
       }}
     >
-      <Row justify={'space-between'}>
-        <Col span={14}>
+      <Row>
+        <Col lg={24} span={24}>
           <Card
             title="画布"
-            bodyStyle={{ overflow: 'auto', height: 740 }}
+            bodyStyle={{ overflow: 'auto', height: 708 }}
             extra={
-              <Button
-                type="default"
-                onClick={() => {
-                  downloadAll()
-                }}
-              >
-                导出所有
-              </Button>
+              <Space>
+                <Button
+                  type="default"
+                  onClick={() => {
+                    downloadAll()
+                  }}
+                >
+                  导出所有
+                </Button>
+
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setShowConfig(true)
+                  }}
+                >
+                  配置水印
+                </Button>
+              </Space>
             }
           >
             {!(setting.image as HTMLImageElement[]).length && <div className="multiple-canvas-empty">请先上传图片</div>}
@@ -98,36 +115,35 @@ const MultipleHanderWatermark: React.FC<propsType> = props => {
             </div>
           </Card>
         </Col>
-        <Col span={10}>
-          <Card
-            bodyStyle={{ overflow: 'auto', height: 740 }}
-            title="配置水印"
-            extra={
-              <Space>
-                <Button
-                  type="link"
-                  danger
-                  onClick={() => {
-                    setSetting({ ...defaultSetting, image: [], file: [] })
-                  }}
-                >
-                  清空配置
-                </Button>
-                <Button type="dashed" className="download-watermark-setting-btn" onClick={downloadSetting}>
-                  导出当前配置
-                </Button>
-                <Upload customRequest={importSetting} showUploadList={false} accept=".json">
-                  <Button type="dashed" className="multi-download-watermark-setting-btn">
-                    导入配置
-                  </Button>
-                </Upload>
-              </Space>
-            }
-          >
-            <ConfigForm multiple={true} formLayout="horizontal" setting={setting} setSetting={setSetting} changeSetting={changeSetting}></ConfigForm>
-          </Card>
-        </Col>
       </Row>
+
+      <Drawer open={showConfig} title="配置" onClose={() => setShowConfig(false)} placement={'top'}>
+        <Card
+          extra={
+            <Space>
+              <Button
+                type="link"
+                danger
+                onClick={() => {
+                  setSetting({ ...defaultSetting, image: [], file: [] })
+                }}
+              >
+                清空配置
+              </Button>
+              <Button type="dashed" size="small" className="download-watermark-setting-btn" onClick={downloadSetting}>
+                导出当前配置
+              </Button>
+              <Upload customRequest={importSetting} showUploadList={false} accept=".json">
+                <Button type="dashed" size="small" className="multi-download-watermark-setting-btn">
+                  导入配置
+                </Button>
+              </Upload>
+            </Space>
+          }
+        >
+          <ConfigForm multiple={true} formLayout="horizontal" setting={setting} setSetting={setSetting} changeSetting={changeSetting}></ConfigForm>
+        </Card>
+      </Drawer>
     </Modal>
   )
 }

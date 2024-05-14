@@ -33,7 +33,7 @@ const Canvas: React.FC<PropsType> = props => {
 
   return (
     <div className="multiple-canvas-content">
-      {!!(setting.image as HTMLImageElement[])[index] && <canvas className="multiple-canvas-item" ref={canvas}></canvas>}
+      {!!(setting.image as HTMLImageElement[])[index] && <canvas className="multiple-canvas-item" style={{ display: 'block' }} ref={canvas}></canvas>}
     </div>
   )
 }
